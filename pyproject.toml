@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vondr"
-version = "0.1.0"
+version = "0.1.1"
 description = "Lightweight helpers and utilities for the Vondr toolkit."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
