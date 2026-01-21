@@ -1,6 +1,6 @@
 # vondr
 
-Minimal Python utilities packaged for PyPI. Managed with Poetry and ready for CI and guarded merges.
+Python client for the Vondr AI Platform.
 
 ## Installation
 
@@ -8,34 +8,117 @@ Minimal Python utilities packaged for PyPI. Managed with Poetry and ready for CI
 pip install vondr
 ```
 
-## Quick start
+For image support (vision):
+
+```bash
+pip install vondr[images]
+```
+
+## Quick Start
 
 ```python
-from vondr import greet
+from vondr import VondrClient
 
-print(greet("Vondr"))
-# -> "Hello, Vondr!"
+# Set environment variables or pass directly
+# VONDR_API_KEY=your-api-key
+# VONDR_BASE_URL=https://{HOSTNAME}-api.vondr.ai/v1
+
+with VondrClient() as client:
+    response = client.chat([
+        {"role": "user", "content": "Hello!"}
+    ])
+    print(response.choices[0].message.content)
 ```
+
+## Chat Completion
+
+```python
+response = client.chat(
+    messages=[{"role": "user", "content": "Explain quantum computing"}],
+    model="vondr-fast",  # or vondr-code, vondr-think
+    temperature=0.7,
+    max_tokens=4096,
+)
+print(response.choices[0].message.content)
+```
+
+## Embeddings
+
+```python
+response = client.embed(
+    input=["Hello world", "Goodbye world"],
+    model="vondr-embed-dense",  # or vondr-embed-sparse
+)
+for item in response.data:
+    print(f"Embedding {item.index}: {len(item.embedding)} dimensions")
+```
+
+## Rerank
+
+```python
+response = client.rerank(
+    query="capital of France",
+    documents=["Paris is in France", "Berlin is in Germany"],
+    model="vondr-rerank",
+)
+for result in response.results:
+    print(f"Document {result.index}: score {result.relevance_score:.3f}")
+```
+
+## Vision (Images)
+
+```python
+from vondr import VondrClient, encode_image
+
+with VondrClient() as client:
+    # Encode image from file path
+    image_uri = encode_image("/path/to/image.jpg")
+
+    response = client.chat([
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "What's in this image?"},
+                {"type": "image_url", "image_url": {"url": image_uri}}
+            ]
+        }
+    ])
+    print(response.choices[0].message.content)
+```
+
+## Async Client
+
+```python
+from vondr import AsyncVondrClient
+
+async with AsyncVondrClient() as client:
+    response = await client.chat([
+        {"role": "user", "content": "Hello!"}
+    ])
+    print(response.choices[0].message.content)
+```
+
+## Available Models
+
+| Model | Description |
+|-------|-------------|
+| `vondr-fast` | Fast general-purpose model |
+| `vondr-code` | Optimized for code generation |
+| `vondr-think` | Reasoning model with thinking budget |
+| `vondr-embed-dense` | Dense embeddings |
+| `vondr-embed-sparse` | Sparse embeddings |
+| `vondr-rerank` | Document reranking |
+
+## Configuration
+
+| Environment Variable | Description |
+|---------------------|-------------|
+| `VONDR_API_KEY` | Your API key |
+| `VONDR_BASE_URL` | API base URL (e.g., `https://{HOSTNAME}-api.vondr.ai/v1`) |
 
 ## Development
 
-1) Install Poetry (`pipx install poetry` recommended).
-2) Install deps: `poetry install`.
-3) Run tests: `poetry run pytest`.
-
-## Release (bump, build, publish)
-
-Set your token before publishing: `POETRY_PYPI_TOKEN_PYPI` (or `POETRY_PYPI_TOKEN_TESTPYPI` when targeting TestPyPI).
-
-```powershell
-./scripts/release.ps1 -Version 0.1.1          # publish to PyPI
-./scripts/release.ps1 -Version 0.1.1 -Repository testpypi  # publish to TestPyPI
+```bash
+poetry install
+poetry run pytest
 ```
-
-The script will bump the version in `pyproject.toml`, install deps, run tests, build wheel+sdist, publish, then commit/tag/push if a git remote exists.
-
-## Branch protection (only admins merge)
-
-- Set up a public remote (e.g., GitHub) and enable branch protection on `main`.
-- Require CI (`CI` workflow) and code owner review.
-- Restrict pushes/merges to admins/maintainers only; see `.github/CODEOWNERS` for who can approve.
