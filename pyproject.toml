@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "vondr"
-version = "0.1.1"
-description = "Lightweight helpers and utilities for the Vondr toolkit."
+version = "0.2.3"
+description = "Python client for the Vondr AI Platform."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
 readme = "README.md"
@@ -9,14 +9,22 @@ packages = [{ include = "vondr" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+httpx = ">=0.27,<1.0.0"
+Pillow = ">=10.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
+pytest-asyncio = "^0.24"
+python-dotenv = "^1.2.1"
 
 [[tool.poetry.source]]
 name = "testpypi"
 url = "https://test.pypi.org/legacy/"
 priority = "explicit"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "strict"
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]
