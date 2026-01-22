@@ -111,7 +111,34 @@ print(response.choices[0].message.content)
 
 ## Development
 
+Install Poetry (`pipx install poetry` recommended).
+
 ```bash
 poetry install
 poetry run pytest
+```
+
+## Release
+
+Set your token before publishing: `POETRY_PYPI_TOKEN_PYPI` (or `POETRY_PYPI_TOKEN_TESTPYPI` when targeting TestPyPI).
+
+**Using PowerShell script:**
+
+```powershell
+./scripts/release.ps1 -Version 0.2.1          # publish to PyPI
+./scripts/release.ps1 -Version 0.2.1 -Repository testpypi  # publish to TestPyPI
+```
+
+The script will bump the version in `pyproject.toml`, install deps, run tests, build wheel+sdist, publish, then commit/tag/push if a git remote exists.
+
+**Manual release:**
+
+```bash
+poetry version 0.2.1
+poetry build
+export POETRY_PYPI_TOKEN_TESTPYPI="your-token"
+poetry publish -r testpypi
+
+export POETRY_PYPI_TOKEN_PYPI="your-token"
+poetry publish
 ```

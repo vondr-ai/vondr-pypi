@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vondr"
-version = "0.2.0"
+version = "0.2.2"
 description = "Python client for the Vondr AI Platform."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ packages = [{ include = "vondr" }]
 [tool.poetry.dependencies]
 python = "^3.10"
 httpx = "^0.27"
-Pillow = "^10.0"
+Pillow = ">=10.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
