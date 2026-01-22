@@ -19,36 +19,36 @@ from vondr import VondrClient
 def test_chat():
     """Test chat completion."""
     print("Testing chat completion...")
-    with VondrClient() as client:
-        response = client.chat(
-            messages=[{"role": "user", "content": "Say hello in one word"}],
-            model="vondr-fast",
-        )
-        print(f"  Response: {response.choices[0].message.content}")
-        print("  ✓ Chat works!")
+    client = VondrClient()
+    response = client.chat(
+        messages=[{"role": "user", "content": "Say hello in one word"}],
+        model="vondr-fast",
+    )
+    print(f"  Response: {response.choices[0].message.content}")
+    print("  ✓ Chat works!")
 
 def test_embed():
     """Test embeddings."""
     print("\nTesting embeddings...")
-    with VondrClient() as client:
-        response = client.embed(
-            input=["Hello world"],
-            model="vondr-embed-dense",
-        )
-        print(f"  Embedding dimensions: {len(response.data[0].embedding)}")
-        print("  ✓ Embed works!")
+    client = VondrClient()
+    response = client.embed(
+        input=["Hello world"],
+        model="vondr-embed",
+    )
+    print(f"  Embedding dimensions: {len(response.data[0].embedding)}")
+    print("  ✓ Embed works!")
 
 def test_rerank():
     """Test reranking."""
     print("\nTesting rerank...")
-    with VondrClient() as client:
-        response = client.rerank(
-            query="capital of France",
-            documents=["Paris is in France", "Berlin is in Germany"],
-            model="vondr-rerank",
-        )
-        print(f"  Top result: index {response.results[0].index}, score {response.results[0].relevance_score:.3f}")
-        print("  ✓ Rerank works!")
+    client = VondrClient()
+    response = client.rerank(
+        query="capital of France",
+        documents=["Paris is in France", "Berlin is in Germany"],
+        model="vondr-rerank",
+    )
+    print(f"  Top result: index {response.results[0].index}, score {response.results[0].relevance_score:.3f}")
+    print("  ✓ Rerank works!")
 
 def test_vision():
     """Test vision with small image."""
@@ -56,21 +56,21 @@ def test_vision():
     # 1x1 red pixel PNG
     data_uri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=="
 
-    with VondrClient() as client:
-        response = client.chat(
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": "What color is this image? One word."},
-                        {"type": "image_url", "image_url": {"url": data_uri}},
-                    ],
-                }
-            ],
-            model="vondr-fast",
-        )
-        print(f"  Response: {response.choices[0].message.content}")
-        print("  ✓ Vision (small) works!")
+    client = VondrClient()
+    response = client.chat(
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "What color is this image? One word."},
+                    {"type": "image_url", "image_url": {"url": data_uri}},
+                ],
+            }
+        ],
+        model="vondr-fast",
+    )
+    print(f"  Response: {response.choices[0].message.content}")
+    print("  ✓ Vision (small) works!")
 
 def test_vision_screenshot():
     """Test vision with screenshot.png file."""
@@ -100,21 +100,21 @@ def test_vision_screenshot():
     encoded_size = len(data_uri.split(",")[1]) * 3 / 4
     print(f"  Encoded size: {encoded_size / 1024:.1f} KB")
 
-    with VondrClient() as client:
-        response = client.chat(
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": "Describe what you see in this screenshot in one sentence."},
-                        {"type": "image_url", "image_url": {"url": data_uri}},
-                    ],
-                }
-            ],
-            model="vondr-fast",
-        )
-        print(f"  Response: {response.choices[0].message.content}")
-        print("  ✓ Vision (screenshot) works!")
+    client = VondrClient()
+    response = client.chat(
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "Describe what you see in this screenshot in one sentence."},
+                    {"type": "image_url", "image_url": {"url": data_uri}},
+                ],
+            }
+        ],
+        model="vondr-fast",
+    )
+    print(f"  Response: {response.choices[0].message.content}")
+    print("  ✓ Vision (screenshot) works!")
 
 if __name__ == "__main__":
     print("=" * 50)

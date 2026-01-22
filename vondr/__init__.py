@@ -5,20 +5,20 @@ Example:
     # Synchronous usage
     from vondr import VondrClient
 
-    with VondrClient() as client:
-        response = client.chat([
-            {"role": "user", "content": "Hello!"}
-        ])
-        print(response.choices[0].message.content)
+    client = VondrClient()
+    response = client.chat([
+        {"role": "user", "content": "Hello!"}
+    ])
+    print(response.choices[0].message.content)
 
     # Asynchronous usage
     from vondr import AsyncVondrClient
 
-    async with AsyncVondrClient() as client:
-        response = await client.chat([
-            {"role": "user", "content": "Hello!"}
-        ])
-        print(response.choices[0].message.content)
+    client = AsyncVondrClient()
+    response = await client.chat([
+        {"role": "user", "content": "Hello!"}
+    ])
+    print(response.choices[0].message.content)
 """
 
 from importlib import metadata as importlib_metadata
