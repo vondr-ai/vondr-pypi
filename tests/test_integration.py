@@ -20,11 +20,11 @@ from vondr.models import (
 class TestEmbedModelParsing:
     """Test that embed API responses parse correctly into EmbeddingResponse."""
 
-    def test_embed_dense_model_parsing(self, client: httpx.Client) -> None:
-        """Test vondr-embed-dense response parses into EmbeddingResponse."""
+    def test_embed_model_parsing(self, client: httpx.Client) -> None:
+        """Test vondr-embed response parses into EmbeddingResponse."""
         response = client.post(
             "/embed",
-            json={"model": "vondr-embed-dense", "input": ["Hello world"]},
+            json={"model": "vondr-embed", "input": ["Hello world"]},
         )
         assert response.status_code == 200
 
@@ -43,7 +43,7 @@ class TestEmbedModelParsing:
         """Test embedding multiple inputs."""
         response = client.post(
             "/embed",
-            json={"model": "vondr-embed-dense", "input": ["Hello", "World"]},
+            json={"model": "vondr-embed", "input": ["Hello", "World"]},
         )
         assert response.status_code == 200
 

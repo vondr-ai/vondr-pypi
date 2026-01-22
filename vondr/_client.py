@@ -31,8 +31,7 @@ SUPPORTED_CHAT_MODELS = {
 }
 
 SUPPORTED_EMBED_MODELS = {
-    "vondr-embed-sparse",
-    "vondr-embed-dense",
+    "vondr-embed",
 }
 
 SUPPORTED_RERANK_MODELS = {
@@ -54,11 +53,11 @@ class AsyncVondrClient:
         max_retries: Maximum number of retries for failed requests. Defaults to 3.
 
     Example:
-        async with AsyncVondrClient(base_url="https://api.example.com/v1") as client:
-            response = await client.chat([
-                {"role": "user", "content": "Hello!"}
-            ])
-            print(response.choices[0].message.content)
+        client = AsyncVondrClient(base_url="https://api.example.com/v1")
+        response = await client.chat([
+            {"role": "user", "content": "Hello!"}
+        ])
+        print(response.choices[0].message.content)
     """
 
     def __init__(
@@ -254,13 +253,13 @@ class AsyncVondrClient:
     async def embed(
         self,
         input: str | list[str],
-        model: str = "vondr-embed-dense",
+        model: str = "vondr-embed",
     ) -> EmbeddingResponse:
         """Create embeddings for text.
 
         Args:
             input: Text or list of texts to embed.
-            model: Model to use. One of: vondr-embed-dense, vondr-embed-sparse.
+            model: Model to use. Defaults to vondr-embed.
 
         Returns:
             EmbeddingResponse with the embeddings.

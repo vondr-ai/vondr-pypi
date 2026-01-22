@@ -27,11 +27,11 @@ class VondrClient:
         max_retries: Maximum number of retries for failed requests. Defaults to 3.
 
     Example:
-        with VondrClient(base_url="https://api.example.com/v1") as client:
-            response = client.chat([
-                {"role": "user", "content": "Hello!"}
-            ])
-            print(response.choices[0].message.content)
+        client = VondrClient(base_url="https://api.example.com/v1")
+        response = client.chat([
+            {"role": "user", "content": "Hello!"}
+        ])
+        print(response.choices[0].message.content)
     """
 
     def __init__(
@@ -135,13 +135,13 @@ class VondrClient:
     def embed(
         self,
         input: str | list[str],
-        model: str = "vondr-embed-dense",
+        model: str = "vondr-embed",
     ) -> EmbeddingResponse:
         """Create embeddings for text.
 
         Args:
             input: Text or list of texts to embed.
-            model: Model to use. One of: vondr-embed-dense, vondr-embed-sparse.
+            model: Model to use. Defaults to vondr-embed.
 
         Returns:
             EmbeddingResponse with the embeddings.

@@ -8,12 +8,6 @@ Python client for the Vondr AI Platform.
 pip install vondr
 ```
 
-For image support (vision):
-
-```bash
-pip install vondr[images]
-```
-
 ## Quick Start
 
 ```python
@@ -23,11 +17,11 @@ from vondr import VondrClient
 # VONDR_API_KEY=your-api-key
 # VONDR_BASE_URL=https://{HOSTNAME}-api.vondr.ai/v1
 
-with VondrClient() as client:
-    response = client.chat([
-        {"role": "user", "content": "Hello!"}
-    ])
-    print(response.choices[0].message.content)
+client = VondrClient()
+response = client.chat([
+    {"role": "user", "content": "Hello!"}
+])
+print(response.choices[0].message.content)
 ```
 
 ## Chat Completion
@@ -47,7 +41,7 @@ print(response.choices[0].message.content)
 ```python
 response = client.embed(
     input=["Hello world", "Goodbye world"],
-    model="vondr-embed-dense",  # or vondr-embed-sparse
+    model="vondr-embed",
 )
 for item in response.data:
     print(f"Embedding {item.index}: {len(item.embedding)} dimensions")
@@ -70,20 +64,20 @@ for result in response.results:
 ```python
 from vondr import VondrClient, encode_image
 
-with VondrClient() as client:
-    # Encode image from file path
-    image_uri = encode_image("/path/to/image.jpg")
+# Encode image from file path
+image_uri = encode_image("/path/to/image.jpg")
 
-    response = client.chat([
-        {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": "What's in this image?"},
-                {"type": "image_url", "image_url": {"url": image_uri}}
-            ]
-        }
-    ])
-    print(response.choices[0].message.content)
+client = VondrClient()
+response = client.chat([
+    {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "What's in this image?"},
+            {"type": "image_url", "image_url": {"url": image_uri}}
+        ]
+    }
+])
+print(response.choices[0].message.content)
 ```
 
 ## Async Client
@@ -91,11 +85,11 @@ with VondrClient() as client:
 ```python
 from vondr import AsyncVondrClient
 
-async with AsyncVondrClient() as client:
-    response = await client.chat([
-        {"role": "user", "content": "Hello!"}
-    ])
-    print(response.choices[0].message.content)
+client = AsyncVondrClient()
+response = await client.chat([
+    {"role": "user", "content": "Hello!"}
+])
+print(response.choices[0].message.content)
 ```
 
 ## Available Models
@@ -105,8 +99,7 @@ async with AsyncVondrClient() as client:
 | `vondr-fast` | Fast general-purpose model |
 | `vondr-code` | Optimized for code generation |
 | `vondr-think` | Reasoning model with thinking budget |
-| `vondr-embed-dense` | Dense embeddings |
-| `vondr-embed-sparse` | Sparse embeddings |
+| `vondr-embed` | Text embeddings |
 | `vondr-rerank` | Document reranking |
 
 ## Configuration
