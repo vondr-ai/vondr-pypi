@@ -167,10 +167,9 @@ files = [
 name = "pillow"
 version = "10.4.0"
 description = "Python Imaging Library (Fork)"
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"images\""
 files = [
     {file = "pillow-10.4.0-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:4d9667937cfa347525b319ae34375c37b9ee6b525440f3ef48542fcf66f2731e"},
     {file = "pillow-10.4.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:543f3dc61c18dafb755773efc89aae60d06b6596a63914107f75459cf984164d"},
@@ -434,10 +433,7 @@ files = [
 ]
 markers = {main = "python_version < \"3.13\"", dev = "python_version == \"3.10\""}
 
-[extras]
-images = ["Pillow"]
-
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "05051da5a1147d77f85c921bdc30ec3f825ce2e857cfb4960ba8dc783fd3bd10"
+content-hash = "3f65ef3aa691f104a529094d6ed1fb55189a0df919fed1d3cd13959d733dbfbc"
