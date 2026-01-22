@@ -1,9 +1,27 @@
 """Pytest configuration and fixtures for integration tests."""
 
-import pytest
+import socket
+
 import httpx
+import pytest
 
 BASE_URL = "http://localhost:8000/v1"
+
+
+def is_server_running(host: str = "localhost", port: int = 8000) -> bool:
+    """Check if the local server is running."""
+    try:
+        with socket.create_connection((host, port), timeout=1):
+            return True
+    except OSError:
+        return False
+
+
+# Skip all tests in this directory if server is not running
+pytestmark = pytest.mark.skipif(
+    not is_server_running(),
+    reason="Local server not running on localhost:8000",
+)
 HEADERS = {
     "x-vondr-auth-type": "api_key",
     "x-vondr-api-key-id": "00000000-0000-0000-0000-000000000001",

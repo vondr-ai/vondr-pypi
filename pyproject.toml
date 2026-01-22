@@ -22,6 +22,10 @@ name = "testpypi"
 url = "https://test.pypi.org/legacy/"
 priority = "explicit"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "strict"
+
 [build-system]
 requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"
