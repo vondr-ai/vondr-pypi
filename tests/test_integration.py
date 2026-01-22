@@ -5,6 +5,7 @@ Requires the local API server to be running on localhost:8000.
 """
 
 import json
+import socket
 
 import httpx
 import pytest
@@ -14,6 +15,21 @@ from vondr.models import (
     ChatCompletionResponse,
     EmbeddingResponse,
     RerankResponse,
+)
+
+
+def _is_server_running(host: str = "localhost", port: int = 8000) -> bool:
+    """Check if the local server is running."""
+    try:
+        with socket.create_connection((host, port), timeout=1):
+            return True
+    except OSError:
+        return False
+
+
+pytestmark = pytest.mark.skipif(
+    not _is_server_running(),
+    reason="Local server not running on localhost:8000",
 )
 
 
