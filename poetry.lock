@@ -436,4 +436,4 @@ markers = {main = "python_version < \"3.13\"", dev = "python_version == \"3.10\"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "3f65ef3aa691f104a529094d6ed1fb55189a0df919fed1d3cd13959d733dbfbc"
+content-hash = "e08113ed73d0adc9d085eb6b80617affe894cf23bf16ca42462ef2a648d8b843"
