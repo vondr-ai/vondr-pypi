@@ -95,6 +95,8 @@ class VondrClient:
         top_p: float = 1.0,
         response_format: dict[str, Any] | None = None,
         thinking_budget: int | None = None,
+        tools: list[dict[str, Any]] | None = None,
+        tool_choice: str | dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> ChatCompletionResponse:
         """Create a chat completion.
@@ -109,6 +111,10 @@ class VondrClient:
             top_p: Nucleus sampling parameter. Defaults to 1.0.
             response_format: Optional response format (e.g., {"type": "json_object"}).
             thinking_budget: Optional thinking budget for reasoning models.
+            tools: Optional list of tools the model can call. Each tool should be
+                a dict with 'type' and 'function' keys (OpenAI format).
+            tool_choice: Controls which tool is called. Can be "auto", "none",
+                "required", or {"type": "function", "function": {"name": "..."}}.
             **kwargs: Additional parameters passed to the API.
 
         Returns:
@@ -118,6 +124,23 @@ class VondrClient:
             response = client.chat([
                 {"role": "user", "content": "Hello!"}
             ])
+
+            # With tools
+            response = client.chat(
+                messages=[{"role": "user", "content": "What's the weather?"}],
+                tools=[{
+                    "type": "function",
+                    "function": {
+                        "name": "get_weather",
+                        "description": "Get weather for a location",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {"location": {"type": "string"}},
+                            "required": ["location"]
+                        }
+                    }
+                }]
+            )
         """
         return self._run(
             self._async_client.chat(
@@ -128,6 +151,8 @@ class VondrClient:
                 top_p=top_p,
                 response_format=response_format,
                 thinking_budget=thinking_budget,
+                tools=tools,
+                tool_choice=tool_choice,
                 **kwargs,
             )
         )
