@@ -193,6 +193,8 @@ class AsyncVondrClient:
         top_p: float = 1.0,
         response_format: dict[str, Any] | None = None,
         thinking_budget: int | None = None,
+        tools: list[dict[str, Any]] | None = None,
+        tool_choice: str | dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> ChatCompletionResponse:
         """Create a chat completion.
@@ -207,6 +209,10 @@ class AsyncVondrClient:
             top_p: Nucleus sampling parameter. Defaults to 1.0.
             response_format: Optional response format (e.g., {"type": "json_object"}).
             thinking_budget: Optional thinking budget for reasoning models.
+            tools: Optional list of tools the model can call. Each tool should be
+                a dict with 'type' and 'function' keys (OpenAI format).
+            tool_choice: Controls which tool is called. Can be "auto", "none",
+                "required", or {"type": "function", "function": {"name": "..."}}.
             **kwargs: Additional parameters passed to the API.
 
         Returns:
@@ -228,6 +234,30 @@ class AsyncVondrClient:
                     ]
                 }
             ])
+
+            # With tools
+            response = await client.chat(
+                messages=[{"role": "user", "content": "What's the weather in Paris?"}],
+                tools=[{
+                    "type": "function",
+                    "function": {
+                        "name": "get_weather",
+                        "description": "Get current weather for a location",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "location": {"type": "string", "description": "City name"}
+                            },
+                            "required": ["location"]
+                        }
+                    }
+                }]
+            )
+            # Check if model wants to call a tool
+            if response.choices[0].message.tool_calls:
+                tool_call = response.choices[0].message.tool_calls[0]
+                print(f"Tool: {tool_call.function.name}")
+                print(f"Args: {tool_call.function.arguments}")
         """
         if model not in SUPPORTED_CHAT_MODELS:
             raise ValueError(f"Unsupported model: {model}. Must be one of {SUPPORTED_CHAT_MODELS}")
@@ -246,6 +276,12 @@ class AsyncVondrClient:
 
         if thinking_budget is not None:
             data["thinking_budget"] = thinking_budget
+
+        if tools is not None:
+            data["tools"] = tools
+
+        if tool_choice is not None:
+            data["tool_choice"] = tool_choice
 
         response = await self._request("POST", "/chat/completions", json=data)
         return ChatCompletionResponse.from_dict(response)
